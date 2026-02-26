@@ -46,12 +46,25 @@ RUN pacman -Syu --noconfirm \
     zip \
     mesa \
     vulkan-intel \
-    vulkan-radeon && \
+    vulkan-radeon \
+    git \
+    base-devel && \
+    pacman -Scc --noconfirm
+
+# 安装 yay (AUR 助手)
+RUN useradd -m builder && \
+    chown builder /tmp && \
+    cd /tmp && \
+    git clone --depth 1 https://aur.archlinux.org/yay-bin.git && \
+    chown -R builder:builder /tmp/yay-bin && \
+    su builder -c "cd /tmp/yay-bin && makepkg -s --noconfirm" && \
+    pacman -U /tmp/yay-bin/yay-bin-*.pkg.tar.zst --noconfirm && \
+    rm -rf /tmp/yay-bin && \
+    userdel -r builder && \
     pacman -Scc --noconfirm
 
 # 设置基础环境
-ENV LANG=en_US.UTF-8
-# ENV LC_ALL=en_US.UTF-8
+ENV LANG=C.UTF-8
 
 # 默认命令
 CMD ["/bin/bash"]
