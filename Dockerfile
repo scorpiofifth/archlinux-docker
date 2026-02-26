@@ -51,12 +51,14 @@ RUN pacman -Syu --noconfirm \
 
 RUN useradd -m builder && \
     chown builder /tmp && \
+    git config --global user.email "builder@localhost" && \
+    git config --global user.name "Builder" && \
     cd /tmp && \
-    git clone --depth 1 https://aur.archlinux.org/yay-bin.git && \
-    chown -R builder:builder /tmp/yay-bin && \
-    su builder -c "cd /tmp/yay-bin && makepkg -s --noconfirm" && \
-    pacman -U /tmp/yay-bin/yay-bin-*.pkg.tar.zst --noconfirm && \
-    rm -rf /tmp/yay-bin && \
+    git clone --depth 1 --single-branch https://github.com/archlinux/aur.git -b yay-bin && \
+    chown -R builder:builder /tmp/aur && \
+    su builder -c "cd /tmp/aur && makepkg -s --noconfirm" && \
+    pacman -U /tmp/aur/yay-bin-*.pkg.tar.zst --noconfirm && \
+    rm -rf /tmp/aur && \
     userdel -r builder && \
     pacman -Scc --noconfirm
 
