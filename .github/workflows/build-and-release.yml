@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'Dockerfile'
   workflow_dispatch:
 
 jobs:
@@ -13,22 +15,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: false
-          tags: archlinux:latest
-          outputs: type=docker,dest=/tmp/archlinux.tar
+          tags: archlinux-for-distrobox:latest
+          outputs: type=docker,dest=/tmp/archlinux-for-distrobox.tar
 
       - name: Compress image
-        run: gzip -c /tmp/archlinux.tar > /tmp/archlinux.tar.gz
+        run: gzip /tmp/archlinux-for-distrobox.tar
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          files: /tmp/archlinux.tar.gz
+          files: /tmp/archlinux-for-distrobox.tar.gz

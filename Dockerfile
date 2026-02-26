@@ -1,4 +1,4 @@
-FROM archlinux:latest
+FROM archlinux:base
 
 # RUN echo "Server = https://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
 
