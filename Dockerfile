@@ -1,9 +1,7 @@
 FROM archlinux:latest
 
-# 更换为中科大镜像源
-RUN echo "Server = https://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
+# RUN echo "Server = https://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
 
-# 更新包数据库并安装软件
 RUN pacman -Syu --noconfirm \
     bash-completion \
     bc \
@@ -51,7 +49,6 @@ RUN pacman -Syu --noconfirm \
     base-devel && \
     pacman -Scc --noconfirm
 
-# 安装 yay (AUR 助手)
 RUN useradd -m builder && \
     chown builder /tmp && \
     cd /tmp && \
@@ -63,8 +60,6 @@ RUN useradd -m builder && \
     userdel -r builder && \
     pacman -Scc --noconfirm
 
-# 设置基础环境
 ENV LANG=C.UTF-8
 
-# 默认命令
 CMD ["/bin/bash"]
